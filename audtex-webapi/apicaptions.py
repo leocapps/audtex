@@ -1,32 +1,31 @@
-from http.server import BaseHTTPRequestHandler
-import json
-import subprocess
+from flask import Flask, request, jsonify, send_file
 import os
+from captions import generate_captions
 
-class handler(BaseHTTPRequestHandler):
-def do_POST(self):
-try:
-length = int(self.headers['Content-Length'])
-body = self.rfile.read(length)
+app = Flask(__name__)
 
-```
-        # Save uploaded video
-        with open("input.mp4", "wb") as f:
-            f.write(body)
+UPLOAD_FOLDER = "temp"
+OUTPUT_FOLDER = "result"
 
-        # Run your AI caption script
-        subprocess.run(["python", "captions.py", "input.mp4", "output.mp4"])
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
-        # Return result video
-        self.send_response(200)
-        self.send_header('Content-type', 'video/mp4')
-        self.end_headers()
+@app.route("/")
+def home():
+    return "AudTex AI API Running"
 
-        with open("output.mp4", "rb") as f:
-            self.wfile.write(f.read())
+@app.route("/generate", methods=["POST"])
+def generate():
+    if "video" not in request.files:
+        return jsonify({"error": "No file uploaded"}), 400
 
-    except Exception as e:
-        self.send_response(500)
-        self.end_headers()
-        self.wfile.write(str(e).encode())
-```
+    video = request.files["video"]
+    video_path = os.path.join(UPLOAD_FOLDER, video.filename)
+    video.save(video_path)
+
+    output_video = generate_captions(video_path)
+
+    return send_file(output_video, as_attachment=True)
+
+if __name__ == "__main__":
+    app.run()

@@ -1,0 +1,11 @@
+flask
+flask-cors
+openai-whisper
+torch
+torchaudio
+moviepy
+imageio
+imageio-ffmpeg
+numpy
+pydub
+ffmpeg-python
