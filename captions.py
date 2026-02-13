@@ -1,3 +1,4 @@
+import sys
 import subprocess
 
 def format_time(t):
@@ -48,3 +49,8 @@ def make_shorts_captions(input_video, segments, output_video):
         "-c:a","copy",
         output_video
     ])
+    if __name__ == "__main__":
+    input_video = sys.argv[1]
+    output_video = sys.argv[2]
+    generate_captions(input_video, output_video)
+
