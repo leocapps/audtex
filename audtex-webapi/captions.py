@@ -51,16 +51,15 @@ def make_shorts_captions(input_video, segments, output_video):
     ])
     if __name__ == "__main__":
     input_video = sys.argv[1]
-    output_video = sys.argv[2]
-    generate_captions(input_video, output_video)
+   
     if __name__ == "__main__":
     import sys
 
     if len(sys.argv) < 2:
         print("No video provided")
-        exit()
+    else:
+        input_video = sys.argv[1]
+        generate_captions(input_video)
 
-    input_video = sys.argv[1]
-    generate_captions(input_video)
 
 
