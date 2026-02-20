@@ -1,34 +1,32 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify
 import os
 from captions import generate_captions
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = "temp"
-OUTPUT_FOLDER = "result"
-
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-os.makedirs(OUTPUT_FOLDER, exist_ok=True)
-
 @app.route("/")
 def home():
-    return "AudTex AI API Running"
+    return "AudTex Caption API Running Successfully!"
 
 @app.route("/generate", methods=["POST"])
 def generate():
-    if "video" not in request.files:
-        return jsonify({"error": "No file uploaded"}), 400
+    try:
+        data = request.get_json()
+        text = data.get("text", "")
 
-    video = request.files["video"]
-    video_path = os.path.join(UPLOAD_FOLDER, video.filename)
-    video.save(video_path)
+        if not text:
+            return jsonify({"error": "No text provided"}), 400
 
-    output_video = generate_captions(video_path)
+        result = generate_captions(text)
 
-    return send_file(output_video, as_attachment=True)
+        return jsonify({
+            "status": "success",
+            "captions": result
+        })
 
-if __name__ == "__main__":
-import os
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
