@@ -51,6 +51,12 @@ def make_shorts_captions(input_video, segments, output_video):
         "-c:a", "copy",
         output_video
     ])
+def generate_captions(input_video, output_video="output.mp4"):
+    # Dummy implementation for now
+    # (Replace with real Whisper logic later)
+    print("Generating captions...")
+    segments = []  # empty segments for now
+    make_shorts_captions(input_video, segments, output_video)
 
 
 
