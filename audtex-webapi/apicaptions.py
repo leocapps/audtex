@@ -1,12 +1,18 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import os
 from captions import generate_captions
 
 app = Flask(__name__)
 
+# 🔥 Enable CORS for all routes
+CORS(app, resources={r"/*": {"origins": "*"}})
+
+
 @app.route("/")
 def home():
     return "AudTex Caption API Running Successfully!"
+
 
 @app.route("/generate", methods=["POST"])
 def generate():
